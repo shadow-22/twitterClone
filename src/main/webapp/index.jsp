@@ -5,29 +5,52 @@
 <html>
 <head>
     <title>Login Page</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="ajax-search.js"></script>
 </head>
 <body>
-    <div class="login-form">
-        <h2>Login</h2>
-        <form action="login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="register.jsp">Register</a></p>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Login</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="login" method="post">
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                        <p class="text-center mt-3">Don't have an account? <a href="register.jsp">Register</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="search-form">
-        <h2>Search Users</h2>
-        <input type="text" id="searchKeyword" name="searchKeyword" required>
-        <button type="button" onclick="searchUsers('index')">Search</button>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Search Users</h2>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" id="searchKeyword" name="searchKeyword" class="form-control mb-2" required>
+                        <button type="button" class="btn btn-primary btn-block" onclick="searchUsers('index')">Search</button>
+                    </div>
+                </div>
+                <!-- Display the search results -->
+                <div id="searchResultsIndex" class="mt-3"></div>
+            </div>
+        </div>
     </div>
-    
-    <!-- Display the search results -->
-    <div id="searchResultsIndex"></div>
 </body>
 </html>
