@@ -149,5 +149,24 @@ public class DatabaseUtils {
             e.printStackTrace();
         }
     }
-
+    
+    public Post getNewlyInsertedPost(String username) {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT * FROM posts WHERE username = ? ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int postId = resultSet.getInt("id");
+                        String postContent = resultSet.getString("postContent");
+                        return new Post(postId, username, postContent);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return null; // Return null if no post is found
+    }
 }

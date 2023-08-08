@@ -25,13 +25,13 @@
                 username = currentSessionUsername;
                 %>
                 <p>You have successfully logged in!</p>
-                <!-- Add a form to create a new post -->
-                <form action="CreatePostServlet" method="post">
+                <!-- Add a form to create a new post using AJAX -->
+                <form id="postForm">
                     <label for="postContent">Create a new post:</label>
                     <br>
                     <textarea id="postContent" name="postContent" rows="5" cols="60" required></textarea>
                     <br>
-                    <input type="submit" value="Post">
+                    <button id="postButton" type="button">Post</button>
                 </form>
                 <%
             } else {
@@ -41,18 +41,19 @@
                 <%
             }
         %>
-        
-        <!-- Display the posts -->
-        <%
-            DatabaseUtils databaseUtils = new DatabaseUtils();
-            List<Post> posts = databaseUtils.getAllPosts(username);
-        %>
-        <% for (Post post : posts) { %>
-            <div class="post">
-                <p><strong><%= post.getUsername() %></strong></p>
-                <p><%= post.getPostContent() %></p>
+
+        <div id="postsContainer">
+            <%
+                DatabaseUtils databaseUtils = new DatabaseUtils();
+                List<Post> posts = databaseUtils.getAllPosts(username);
+            %>
+            <% for (int i = posts.size() - 1; i >= 0; i--) { %>
+                <div class="post">
+                    <p><strong><%= posts.get(i).getUsername() %></strong></p>
+                    <p><%= posts.get(i).getPostContent() %></p>
+                </div>
+            <% } %>
             </div>
-        <% } %>
 
         <!-- Search Users Form -->
         <div class="search-form">
