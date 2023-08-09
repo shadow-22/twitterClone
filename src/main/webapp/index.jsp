@@ -10,8 +10,13 @@
 </head>
 <body>
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="logo-container">
+                    <img src="${pageContext.request.contextPath}/logo.png" alt="Logo" class="logo img-fluid">
+                </div>
+            </div>
+            <div class="col-md-6 offset-md-2">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="text-center">Login</h2>
@@ -36,7 +41,7 @@
     </div>
 
     <div class="container mt-5">
-        <div class="row justify-content-center">
+        <div class="row justify-content-end">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -52,5 +57,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

@@ -73,6 +73,17 @@
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.2.2</version>
+          <configuration>
+                <webResources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <!-- Exclude JSP files to prevent duplicate copying -->
+                        <excludes>
+                            <exclude>**/*.jsp</exclude>
+                        </excludes>
+                    </resource>
+                </webResources>
+            </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>

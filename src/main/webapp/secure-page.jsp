@@ -10,6 +10,7 @@
     <title>Secure Page</title>
     <link rel="stylesheet" type="text/css" href="secure-page.css">
     <script src="ajax-search.js"></script>
+    <script src="ajax-post.js"></script>
 </head>
 <body>
     <div class="container">
