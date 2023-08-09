@@ -2,8 +2,6 @@ package com.myapp.database;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,14 +49,14 @@ public class CreatePostServlet extends HttpServlet {
         }
     }
 
-    private String generatePostsHtml(List<Post> posts) {
-        StringBuilder htmlBuilder = new StringBuilder();
-        for (Post post : posts) {
-            htmlBuilder.append("<div class=\"post\">");
-            htmlBuilder.append("<p><strong>").append(post.getUsername()).append("</strong></p>");
-            htmlBuilder.append("<p>").append(post.getPostContent()).append("</p>");
-            htmlBuilder.append("</div>");
-        }
-        return htmlBuilder.toString();
-    }
+    // private String generatePostsHtml(List<Post> posts) {
+    //     StringBuilder htmlBuilder = new StringBuilder();
+    //     for (Post post : posts) {
+    //         htmlBuilder.append("<div class=\"post\">");
+    //         htmlBuilder.append("<p><strong>").append(post.getUsername()).append("</strong></p>");
+    //         htmlBuilder.append("<p>").append(post.getPostContent()).append("</p>");
+    //         htmlBuilder.append("</div>");
+    //     }
+    //     return htmlBuilder.toString();
+    // }
 }
