@@ -8,8 +8,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add event listener to the "Post" button
     var postButton = document.getElementById("postButton");
-    console.log("postButton:", postButton);
-    postButton.addEventListener("click", createPost);
+    
+    if (postButton) {
+        console.log("postButton:", postButton);
+        postButton.addEventListener("click", createPost);
+    }
+
 });
 
 

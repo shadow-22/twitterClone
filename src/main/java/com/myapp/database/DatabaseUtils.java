@@ -31,6 +31,7 @@ public class DatabaseUtils {
             createDatabase(connection);
             createUsersTable(connection);
             createPostsTable(connection);
+            createRetweetsTable(connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +48,7 @@ public class DatabaseUtils {
             statement.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS myappdb.users (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "username VARCHAR(50) NOT NULL," +
+                    "username VARCHAR(50) NOT NULL UNIQUE," +
                     "password VARCHAR(100) NOT NULL" +
                     ")"
             );
@@ -63,9 +64,24 @@ public class DatabaseUtils {
                     "postContent VARCHAR(500) NOT NULL," +
                     "created_at TIMESTAMP" +
                     ")"
-             );
+            );
         }
     }    
+
+    public static void createRetweetsTable(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS myappdb.retweets (" + 
+                    "id INT AUTO_INCREMENT PRIMARY KEY," +
+                    "original_post_id INT NOT NULL," +
+                    "retweeter_username VARCHAR(50) NOT NULL," +
+                    "retweet_time TIMESTAMP," +
+                    "FOREIGN KEY (original_post_id) REFERENCES posts(id)," +
+                    "FOREIGN KEY (retweeter_username) REFERENCES users(username)" +
+                    ")"
+            );
+        }
+    }
 
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
@@ -195,6 +211,34 @@ public class DatabaseUtils {
         }
     
         return false;
+    }
+
+    public static void insertRetweet(int postId, String retweeterUsername) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO retweets (original_post_id, retweeter_username) VALUES (?, ?)")) {
+            preparedStatement.setInt(1, postId);
+            preparedStatement.setString(2, retweeterUsername);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public static String getPostContent(int postId) throws SQLException {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT postContent FROM posts WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, postId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("postContent");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return null; // Return null if no post content is found
     }
 
 }

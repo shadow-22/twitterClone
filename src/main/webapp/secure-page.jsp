@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="ajax-search.js"></script>
     <script src="ajax-post.js"></script>
+    <script src="ajax-retweet.js"></script>
 </head>
 <body>
     <div class="container mt-5">
@@ -56,6 +57,11 @@
                     <div class="post">
                         <p><%= posts.get(i).getPostContent() %></p>
                         <p><%= posts.get(i).getTimestamp() %>s</p>
+                        
+                        <!-- Add Retweet button -->
+                        <% if (!posts.get(i).getUsername().equals(currentSessionUsername)) { %>
+                        <button class="retweetButton" data-postid="<%= posts.get(i).getId() %>">Retweet</button>
+                        <% } %>
                     </div>
                     <% } %>
                 </div>
