@@ -14,7 +14,9 @@
 </head>
 <body>
     <div class="container">
+        <!--
         <h1>Welcome to the Home Page</h1>
+        -->
         <%-- Check if the user is logged in --%>
         <%
             String username_parameter = request.getParameter("username");
@@ -25,6 +27,7 @@
             if (currentSessionUsername != null && (username_parameter == null || currentSessionUsername.equals(username_parameter))) {
                 username = currentSessionUsername;
                 %>
+                <h1>Welcome to your Home Page</h1>
                 <p>You have successfully logged in!</p>
                 <!-- Add a form to create a new post using AJAX -->
                 <form id="postForm">
@@ -38,7 +41,8 @@
             } else {
                 username = username_parameter;
                 %>
-                <p>You are viewing this page as a guest. Login to create posts.</p>
+                <h1>Profile page of <%= username %></h1>
+                <p>You are viewing this page as a guest.</p>
                 <%
             }
         %>
@@ -50,8 +54,9 @@
             %>
             <% for (int i = posts.size() - 1; i >= 0; i--) { %>
                 <div class="post">
-                    <p><strong><%= posts.get(i).getUsername() %></strong></p>
+                    <!--<p><strong><%= posts.get(i).getUsername() %></strong></p>-->
                     <p><%= posts.get(i).getPostContent() %></p>
+                    <p><%= posts.get(i).getTimestamp() %>s</p>
                 </div>
             <% } %>
             </div>

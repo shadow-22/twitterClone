@@ -39,13 +39,19 @@ function displayNewPost(newPost) {
     var postDiv = document.createElement("div");
     postDiv.className = "post";
     
+    /*
     var usernameParagraph = document.createElement("p");
     usernameParagraph.innerHTML = "<strong>" + newPost.username + "</strong>";
     postDiv.appendChild(usernameParagraph);
-
+    */
+   
     var contentParagraph = document.createElement("p");
     contentParagraph.textContent = newPost.postContent;
     postDiv.appendChild(contentParagraph);
+
+    var timestamp = document.createElement("p");
+    timestamp.textContent = newPost.timestamp;
+    postDiv.appendChild(timestamp);
 
     postsContainer.prepend(postDiv); // Add the new post to the top of the posts container
 }

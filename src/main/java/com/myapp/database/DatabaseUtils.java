@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.String;
+
+import java.sql.Timestamp;
 
 public class DatabaseUtils {
     private final String JDBC_URL = "jdbc:mysql://localhost:3306/";
@@ -27,7 +30,7 @@ public class DatabaseUtils {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             createDatabase(connection);
             createUsersTable(connection);
-            createPostsTable();
+            createPostsTable(connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,24 +54,28 @@ public class DatabaseUtils {
         }
     }
 
-    public static void createPostsTable() throws SQLException {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS posts (" +
+    public static void createPostsTable(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+             statement.executeUpdate( 
+                    "CREATE TABLE IF NOT EXISTS myappdb.posts (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "username VARCHAR(50) NOT NULL," +
-                    "postContent VARCHAR(500) NOT NULL" +
-                    ")";
-            statement.executeUpdate(sql);
+                    "postContent VARCHAR(500) NOT NULL," +
+                    "created_at TIMESTAMP" +
+                    ")"
+             );
         }
     }    
 
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO posts (username, postContent) VALUES (?, ?)")) {
+                    "INSERT INTO posts (username, postContent, created_at) VALUES (?, ?, ?)")) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, postContent);
+            // Set the timestamp to the current time
+            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+            preparedStatement.setTimestamp(3, timestamp);
             preparedStatement.executeUpdate();
         }
     }
@@ -84,8 +91,8 @@ public class DatabaseUtils {
                     while (resultSet.next()) {
                         int postId = resultSet.getInt("id");
                         String postContent = resultSet.getString("postContent");
-    
-                        Post post = new Post(postId, username, postContent);
+                        Timestamp timestamp = resultSet.getTimestamp("created_at");
+                        Post post = new Post(postId, username, postContent, timestamp);
                         posts.add(post);
                     }
                 }
@@ -159,7 +166,8 @@ public class DatabaseUtils {
                     if (resultSet.next()) {
                         int postId = resultSet.getInt("id");
                         String postContent = resultSet.getString("postContent");
-                        return new Post(postId, username, postContent);
+                        Timestamp timestamp = resultSet.getTimestamp("created_at");
+                        return new Post(postId, username, postContent, timestamp);
                     }
                 }
             }

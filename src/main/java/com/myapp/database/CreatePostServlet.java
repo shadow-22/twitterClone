@@ -12,6 +12,9 @@ import com.google.gson.Gson;
 
 import javax.servlet.annotation.WebServlet;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @WebServlet("/CreatePostServlet")
 public class CreatePostServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -31,6 +34,13 @@ public class CreatePostServlet extends HttpServlet {
             // Get the newly inserted post
             Post newPost = databaseUtils.getNewlyInsertedPost(username);
 
+            // Generate the timestamp for the new post
+            /* 
+            LocalDateTime now = LocalDateTime.now();
+            Timestamp timestamp = Timestamp.valueOf(now);
+            newPost.setTimestamp(timestamp);
+            */
+            
             // Convert newPost to JSON and send it as a response
             Gson gson = new Gson();
             String jsonNewPost = gson.toJson(newPost);
