@@ -177,4 +177,24 @@ public class DatabaseUtils {
     
         return null; // Return null if no post is found
     }
+
+    public boolean isUsernameTaken(String username) {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt(1);
+                        return count > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return false;
+    }
+
 }

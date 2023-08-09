@@ -4,6 +4,8 @@
     <title>Registration Page</title>
     <!--<link rel="stylesheet" type="text/css" href="style.css">-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="register.js"></script>
 </head>
 <body>
     <div class="container">
@@ -19,6 +21,7 @@
                                     <form action="register" method="post">
                                         <label for="username" >Username:</label>
                                         <input type="text" id="username" name="username" class="form-control" required>
+                                        <div id="usernameFeedback" class="text-danger" style="display: none;"></div>
                                         <label for="password">Password:</label>
                                         <input type="password" id="password" name="password" class="form-control" required>
                                         <button type="submit" class="btn btn-primary btn-block">Register</button>

@@ -46,6 +46,12 @@
         <version>2.10.1</version> <!-- Use the latest version -->
     </dependency>
 
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery</artifactId>
+        <version>3.6.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -81,7 +87,7 @@
                         <excludes>
                             <exclude>**/*.jsp</exclude>
                         </excludes>
-                    </resource>
+                    </resource>                    
                 </webResources>
             </configuration>
         </plugin>
