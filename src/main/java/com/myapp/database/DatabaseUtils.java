@@ -100,15 +100,22 @@ public class DatabaseUtils {
         List<Post> posts = new ArrayList<>();
     
         try (Connection connection = getConnection()) {
-            String sql = "SELECT * FROM posts WHERE username = ?";
+            //String sql = "SELECT * FROM posts WHERE username = ?";
+            String sql = "SELECT p.id, p.username, p.postContent, p.created_at, r.retweeter_username " +
+                         "FROM posts p " +
+                         "LEFT JOIN retweets r ON p.id = r.original_post_id " +
+                         "WHERE p.username = ? OR r.retweeter_username = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, username);
+                statement.setString(2, username);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         int postId = resultSet.getInt("id");
+                        String creatorUsername = resultSet.getString("username");
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
-                        Post post = new Post(postId, username, postContent, timestamp);
+                        String retweeterUsername = resultSet.getString("retweeter_username");
+                        Post post = new Post(postId, creatorUsername, postContent, timestamp, retweeterUsername);
                         posts.add(post);
                     }
                 }
@@ -216,9 +223,11 @@ public class DatabaseUtils {
     public static void insertRetweet(int postId, String retweeterUsername) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO retweets (original_post_id, retweeter_username) VALUES (?, ?)")) {
+                    "INSERT INTO retweets (original_post_id, retweeter_username, retweet_time) VALUES (?, ?, ?)")) {
             preparedStatement.setInt(1, postId);
             preparedStatement.setString(2, retweeterUsername);
+            Timestamp retweetTime = Timestamp.valueOf(LocalDateTime.now());
+            preparedStatement.setTimestamp(3, retweetTime);            
             preparedStatement.executeUpdate();
         }
     }

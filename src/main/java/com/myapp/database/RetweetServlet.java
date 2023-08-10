@@ -23,10 +23,10 @@ public class RetweetServlet extends HttpServlet {
             // Insert the retweet into the database
             DatabaseUtils.insertRetweet(postId, retweeterUsername);
             // Get the retweet content
-            String retweetContent = getRetweetContent(postId, retweeterUsername);
+            //String retweetContent = getRetweetContent(postId, retweeterUsername);
 
             // Send the retweet content as the response
-            response.getWriter().write(retweetContent);
+            //response.getWriter().write(retweetContent);
             // Send a success response
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (SQLException e) {

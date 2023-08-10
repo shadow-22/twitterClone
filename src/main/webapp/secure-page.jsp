@@ -8,6 +8,14 @@
 <html>
 <head>
     <title>Secure Page</title>
+    <style>
+        .post {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f5f5f5;
+        }
+    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="ajax-search.js"></script>
     <script src="ajax-post.js"></script>
@@ -55,6 +63,11 @@
                     %>
                     <% for (int i = posts.size() - 1; i >= 0; i--) { %>
                     <div class="post">
+                        <%-- Check if the post is a retweet --%>
+                        <% if (posts.get(i).isRetweet()) { %>
+                            <p>Retweeted by <%= posts.get(i).getRetweeterUsername() %></p>
+                            <p><strong>Original Post of <%= posts.get(i).getUsername() %>:</strong></p>
+                        <% } %>
                         <p><%= posts.get(i).getPostContent() %></p>
                         <p><%= posts.get(i).getTimestamp() %>s</p>
                         
