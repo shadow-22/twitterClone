@@ -64,7 +64,7 @@
                     <% for (int i = posts.size() - 1; i >= 0; i--) { %>
                     <div class="post">
                         <%-- Check if the post is a retweet --%>
-                        <% if (posts.get(i).isRetweet()) { %>
+                        <% if (posts.get(i).isRetweet() && !(posts.get(i).getUsername().equals(username))) { %>
                             <p>Retweeted by <%= posts.get(i).getRetweeterUsername() %></p>
                             <p><strong>Original Post of <%= posts.get(i).getUsername() %>:</strong></p>
                         <% } %>
@@ -72,7 +72,7 @@
                         <p><%= posts.get(i).getTimestamp() %>s</p>
                         
                         <!-- Add Retweet button -->
-                        <% if (!posts.get(i).getUsername().equals(currentSessionUsername)) { %>
+                        <% if (!posts.get(i).getUsername().equals(currentSessionUsername) && !posts.get(i).isRetweet()) { %>
                         <button class="retweetButton" data-postid="<%= posts.get(i).getId() %>">Retweet</button>
                         <% } %>
                     </div>
