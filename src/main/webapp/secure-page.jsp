@@ -8,33 +8,8 @@
 <html>
 <head>
     <title>Secure Page</title>
-    <style>
-        .post {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #f5f5f5;
-        }
-        .profile-container {
-            display: flex;
-            align-items: flex-start; /* Align items at the top of the flex container */
-        }
-
-        .profile-picture {
-            flex: 0 0 auto; /* Prevent the image from growing or shrinking */
-            margin-right: 20px; /* Add some spacing between the picture and the bio */
-        }
-
-        .profile-picture img {
-            max-width: 100px; /* Set the maximum width of the profile picture */
-            height: auto; /* Maintain the aspect ratio */
-        }
-
-        .bio {
-            flex: 1 1 auto; /* Allow the bio to grow and take up available space */
-        }
-    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="secure-page.css" />
     <script src="ajax-search.js"></script>
     <script src="ajax-post.js"></script>
     <script src="ajax-retweet.js"></script>
@@ -43,6 +18,9 @@
 <body>
     <div class="container mt-5">
         <div class="card">
+            <div class="navbar">
+                <button onclick="window.location.href = 'index.jsp';">Home</button>
+            </div>
             <div class="card-header">
                 <!-- Check if the user is logged in -->
                 <%
