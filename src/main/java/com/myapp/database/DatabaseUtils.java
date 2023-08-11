@@ -50,7 +50,8 @@ public class DatabaseUtils {
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "username VARCHAR(50) NOT NULL UNIQUE," +
                     "password VARCHAR(100) NOT NULL," +
-                    "bio VARCHAR(250)" +
+                    "bio VARCHAR(250)," +
+                    "profile_picture VARCHAR(255) DEFAULT NULL" +
                     ")"
             );
         }
@@ -204,15 +205,21 @@ public class DatabaseUtils {
 
     public boolean isUsernameTaken(String username) {
         try (Connection connection = getConnection()) {
-            String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        int count = resultSet.getInt(1);
-                        return count > 0;
+            if (connection != null) {
+                String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setString(1, username);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            int count = resultSet.getInt(1);
+                            return count > 0;
+                        }
                     }
                 }
+            } else {
+                // Handle the case where there's no database connection
+                // You might log an error or handle it based on your application's requirements
+                System.err.println("No database connection available.");                
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -275,5 +282,78 @@ public class DatabaseUtils {
             }
         }
         return null; // Return null if no bio is found
+    }
+
+    public static String getProfilePicturePath(String username) {
+        String profilePicturePath = null;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection(); // Implement your database connection method
+
+            String query = "SELECT profile_picture FROM users WHERE username = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                profilePicturePath = resultSet.getString("profile_picture");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return profilePicturePath;
+    }
+
+    public static void updateProfilePicture(String username, String pictureFilePath) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = getConnection();
+            String query = "UPDATE users SET profile_picture = ? WHERE username = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, pictureFilePath);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }    
+    
 }

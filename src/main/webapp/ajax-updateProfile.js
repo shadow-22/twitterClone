@@ -16,10 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(formData.get("bio"));
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    // Success: Handle UI update or refresh
-                    // For example, refresh the page to see the updated profile
-                    //location.reload();
-                    console.log(formData);
+                    var responseJson = JSON.parse(xhr.responseText);
+                    var updatedProfilePicturePath = responseJson.profilePicturePath;
+
+                    updateProfilePicture(updatedProfilePicturePath);
                     var updatedBioDiv = document.getElementById("bioText");
                     updatedBioDiv.textContent = document.getElementById("bio").value; // Display the updated bio
                 } else {
@@ -32,3 +32,10 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.send(formData);
     });
 });
+
+
+// After successfully updating profile details, update the profile picture
+function updateProfilePicture(picturePath) {
+    const profilePictureElement = document.getElementById("profile_Picture");
+    profilePictureElement.src = "GetImageServlet?imageName=" + encodeURIComponent(picturePath);
+}

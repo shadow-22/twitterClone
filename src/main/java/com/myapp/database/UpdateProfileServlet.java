@@ -1,5 +1,6 @@
 package com.myapp.database;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -31,6 +32,21 @@ public class UpdateProfileServlet extends HttpServlet {
             // Log the profile picture filename or details for debugging
             String profilePictureFileName = profilePicturePart.getSubmittedFileName();
             System.out.println("Received profile picture: " + profilePictureFileName);
+            
+            // Get the server's upload directory
+            String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "profile_pictures";
+            //String uploadPath = "C:/uploads/profile_pictures";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            // Save the profile picture to the server's file system
+            String pictureFilePath = uploadPath + File.separator + profilePictureFileName;
+            profilePicturePart.write(pictureFilePath);
+
+            // Store the file path in the database for the user
+            DatabaseUtils.updateProfilePicture(username, pictureFilePath);            
         }
         
 
@@ -51,6 +67,13 @@ public class UpdateProfileServlet extends HttpServlet {
 
         // Redirect to the profile page or return a success response
         //response.sendRedirect("secure-page.jsp");
-        response.setStatus(HttpServletResponse.SC_OK);
+        //response.setStatus(HttpServletResponse.SC_OK);
+        // Now, let's prepare the response
+        String profilePicturePath = DatabaseUtils.getProfilePicturePath(username);
+
+        // Set the content type and write the profile picture path to the response
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(profilePicturePath);
     }
 }

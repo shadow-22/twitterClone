@@ -46,10 +46,12 @@
             <%    }
             %>
 
+            <% String profilePicturePath = DatabaseUtils.getProfilePicturePath(username); %>
             <!-- Add user profile information and update form -->
             <div class="profile-container">
                 <div class="profile-picture">
-                    <img src="${pageContext.request.contextPath}/Stalin.jpg" alt="Profile Picture">
+                   <!-- <img id="profile_Picture" src="${pageContext.request.contextPath}/Stalin.jpg" alt="Profile Picture">-->
+                   <img id="profile_Picture" src="<c:url value='/GetImageServlet?imageName=${profilePicturePath}' />" onerror="this.src='${pageContext.request.contextPath}/Stalin.jpg'" alt="Profile Picture">
                 </div>
                 
                 <!-- Display Update Profile form if logged in user visits his own profile page -->
