@@ -57,30 +57,36 @@
                 <h1>Welcome to your Home Page</h1>
                 <p>You have successfully logged in!</p>
             </div>
+            <% } else {
+                    username = username_parameter;
+                    %>
+                     <!-- Add a different welcoming header if visiting as a guest -->
+                    <div class="card-body">
+                        <h1>Profile page of <%= username %></h1>
+                        <p>You are viewing this page as a guest.</p>
+                    </div>
+            <%    }
+            %>
+
             <!-- Add user profile information and update form -->
-            <!--
-            <div class="profile-section">
-                <h2>Your Profile</h2>
-                <img src="${pageContext.request.contextPath}/Stalin.jpg" alt="Profile Picture" class="profile-picture">
-                <form id="updateProfileForm" enctype="multipart/form-data">
-                    <input type="file" id="profilePicture" name="profilePicture">
-                    <textarea id="bio" name="bio" rows="3" placeholder="Enter your bio"></textarea>
-                    <button type="submit">Update Profile</button>
-                </form>
-            </div>
-        -->
             <div class="profile-container">
                 <div class="profile-picture">
                     <img src="${pageContext.request.contextPath}/Stalin.jpg" alt="Profile Picture">
                 </div>
-                <div class="bio">
-                    <form id="updateProfileForm" enctype="multipart/form-data">
-                        <input type="file" id="profilePicture" name="profilePicture">
-                        <textarea id="bio" name="bio" rows="3" placeholder="Enter your bio"></textarea>
-                        <button type="submit">Update Profile</button>
-                    </form>
-                </div>
-                <% String bio = DatabaseUtils.getUserBio(currentSessionUsername); %>
+                
+                <!-- Display Update Profile form if logged in user visits his own profile page -->
+                <% if (username.equals(currentSessionUsername)) { %>
+                    <div class="bio">
+                        <form id="updateProfileForm" enctype="multipart/form-data">
+                            <input type="file" id="profilePicture" name="profilePicture">
+                            <textarea id="bio" name="bio" rows="3" placeholder="Enter your bio"></textarea>
+                            <button type="submit">Update Profile</button>
+                        </form>
+                    </div>
+                <% } %>
+
+                <!-- Display the bio at all times if not null -->
+                <% String bio = DatabaseUtils.getUserBio(username); %>
                 <div class="updated-bio" id="updatedBioDiv">
                     <p><strong>Bio:</strong></p>
                     <p id="bioText">
@@ -92,21 +98,17 @@
                     </p>
                 </div>
             </div>
-            <!-- Add a form to create a new post using AJAX -->
-            <div class="card-body">
-                <form id="postForm">
-                    <label for="postContent">Create a new post:</label>
-                    <textarea id="postContent" name="postContent" rows="5" cols="60" required class="form-control"></textarea>
-                    <button id="postButton" type="button" class="btn btn-primary mt-3">Post</button>
-                </form>
-            </div>
-            <% } else {
-                username = username_parameter;
-            %>
-            <div class="card-body">
-                <h1>Profile page of <%= username %></h1>
-                <p>You are viewing this page as a guest.</p>
-            </div>
+            
+            <!-- Add a form to create a new post using AJAX if 
+                logged in user visits his own profile page -->
+            <% if (username.equals(currentSessionUsername)) { %>
+                <div class="card-body">
+                    <form id="postForm">
+                        <label for="postContent">Create a new post:</label>
+                        <textarea id="postContent" name="postContent" rows="5" cols="60" required class="form-control"></textarea>
+                        <button id="postButton" type="button" class="btn btn-primary mt-3">Post</button>
+                    </form>
+                </div>
             <% } %>
 
             <div class="card-body">
@@ -133,7 +135,9 @@
                     <% } %>
                 </div>
             </div>
+
         </div>
+
     </div>
 
     <!-- Search Users Form -->
