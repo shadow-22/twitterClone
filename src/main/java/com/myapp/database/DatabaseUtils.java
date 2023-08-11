@@ -49,7 +49,8 @@ public class DatabaseUtils {
                     "CREATE TABLE IF NOT EXISTS myappdb.users (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "username VARCHAR(50) NOT NULL UNIQUE," +
-                    "password VARCHAR(100) NOT NULL" +
+                    "password VARCHAR(100) NOT NULL," +
+                    "bio VARCHAR(250)" +
                     ")"
             );
         }
@@ -250,4 +251,29 @@ public class DatabaseUtils {
         return null; // Return null if no post content is found
     }
 
+    public static void updateUserBio(String username, String bio) throws SQLException {
+        try (Connection connection = getConnection()) {
+            String sql = "UPDATE users SET bio = ? WHERE username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, bio);
+                statement.setString(2, username);
+                statement.executeUpdate();
+            }
+        }
+    }
+
+    public static String getUserBio(String username) throws SQLException {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT bio FROM users WHERE username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("bio");
+                    }
+                }
+            }
+        }
+        return null; // Return null if no bio is found
+    }    
 }

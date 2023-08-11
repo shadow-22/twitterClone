@@ -80,6 +80,17 @@
                         <button type="submit">Update Profile</button>
                     </form>
                 </div>
+                <% String bio = DatabaseUtils.getUserBio(currentSessionUsername); %>
+                <div class="updated-bio" id="updatedBioDiv">
+                    <p><strong>Bio:</strong></p>
+                    <p id="bioText">
+                        <% if (bio != null) { %>
+                            <%= bio %>
+                        <% } else { %>
+                            No bio available.
+                        <% } %>
+                    </p>
+                </div>
             </div>
             <!-- Add a form to create a new post using AJAX -->
             <div class="card-body">
