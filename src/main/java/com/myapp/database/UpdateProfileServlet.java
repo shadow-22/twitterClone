@@ -2,6 +2,7 @@ package com.myapp.database;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import com.google.gson.JsonObject;
 
 @WebServlet("/UpdateProfileServlet")
 @MultipartConfig
@@ -34,8 +37,9 @@ public class UpdateProfileServlet extends HttpServlet {
             System.out.println("Received profile picture: " + profilePictureFileName);
             
             // Get the server's upload directory
-            String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "profile_pictures";
+            String uploadPath = getServletContext().getRealPath("") + "uploads" + File.separator + "profile_pictures";
             //String uploadPath = "C:/uploads/profile_pictures";
+            System.out.println("Uploaded path is: " + uploadPath);
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -69,11 +73,29 @@ public class UpdateProfileServlet extends HttpServlet {
         //response.sendRedirect("secure-page.jsp");
         //response.setStatus(HttpServletResponse.SC_OK);
         // Now, let's prepare the response
+         
         String profilePicturePath = DatabaseUtils.getProfilePicturePath(username);
-
+        File imageFile = new File(profilePicturePath);
+        String imageName = imageFile.getName();
+        /* 
         // Set the content type and write the profile picture path to the response
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(profilePicturePath);
+        */
+
+        // Prepare the JSON response
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("success", true); // Indicate success
+        jsonResponse.addProperty("profilePicturePath", imageName); // Provide the updated profile picture path
+
+        // Set response content type to JSON
+        response.setContentType("application/json");
+
+        // Write the JSON response to the output stream
+        try (PrintWriter out = response.getWriter()) {
+            out.println(jsonResponse.toString());
+        }
+
     }
 }

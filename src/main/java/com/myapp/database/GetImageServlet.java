@@ -18,10 +18,18 @@ public class GetImageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         // Get the image path from the request parameter
-        String imagePath = request.getParameter("imageName");
+        String imageName = request.getParameter("imageName");
+        System.out.println("Requested Image Name: " + imageName);
+
+        // Construct the full image path using the configured upload directory
+        String uploadDirectory = "C:/apache-tomcat-8.5.91/webapps/my-email-app/uploads/profile_pictures/";
+        String imagePath = uploadDirectory + imageName;
+
+        System.out.println("Image Path is: " + imagePath);
 
         // Set content type and headers
-        response.setContentType("image/jpeg"); // Assuming images are in JPEG format
+        //response.setContentType("image/jpeg"); // Assuming images are in JPEG format
+        response.setContentType("image/png");
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma", "no-cache");
@@ -38,5 +46,5 @@ public class GetImageServlet extends HttpServlet {
             // Handle file not found error
             e.printStackTrace();
         }
-}
+    }
 }

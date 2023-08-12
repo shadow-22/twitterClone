@@ -20,8 +20,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     var updatedProfilePicturePath = responseJson.profilePicturePath;
 
                     updateProfilePicture(updatedProfilePicturePath);
-                    var updatedBioDiv = document.getElementById("bioText");
-                    updatedBioDiv.textContent = document.getElementById("bio").value; // Display the updated bio
+                    
+                    // Check if the bio value was actually updated before displaying
+                    var updatedBioValue = document.getElementById("bio").value;
+                    if (updatedBioValue.trim() !== "") {
+                        var updatedBioDiv = document.getElementById("bioText");
+                        updatedBioDiv.textContent = updatedBioValue; // Display the updated bio
+                    }
                 } else {
                     console.error("Error: " + xhr.statusText);
                 }
@@ -37,5 +42,6 @@ document.addEventListener("DOMContentLoaded", function() {
 // After successfully updating profile details, update the profile picture
 function updateProfilePicture(picturePath) {
     const profilePictureElement = document.getElementById("profile_Picture");
+    console.log("Picture path: " + picturePath);
     profilePictureElement.src = "GetImageServlet?imageName=" + encodeURIComponent(picturePath);
 }

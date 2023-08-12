@@ -1,5 +1,6 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.io.File" %> <!-- Import the File class -->
 <%@ page import="com.myapp.database.DatabaseUtils" %>
 <%@ page import="com.myapp.database.Post" %>
 <%@ page import="com.myapp.database.User" %>
@@ -46,12 +47,18 @@
             <%    }
             %>
 
-            <% String profilePicturePath = DatabaseUtils.getProfilePicturePath(username); %>
+            <% 
+            String profilePicturePath = DatabaseUtils.getProfilePicturePath(username); 
+            File imageFile = new File(profilePicturePath);
+            String imageName = imageFile.getName();
+
+            // Get the project context path
+            String contextPath = request.getContextPath();
+            %>
             <!-- Add user profile information and update form -->
             <div class="profile-container">
                 <div class="profile-picture">
-                   <!-- <img id="profile_Picture" src="${pageContext.request.contextPath}/Stalin.jpg" alt="Profile Picture">-->
-                   <img id="profile_Picture" src="<c:url value='/GetImageServlet?imageName=${profilePicturePath}' />" onerror="this.src='${pageContext.request.contextPath}/Stalin.jpg'" alt="Profile Picture">
+                   <img id="profile_Picture" src="<%= contextPath %>/GetImageServlet?imageName=<%= imageName %>" onerror="this.src='${pageContext.request.contextPath}/Stalin.jpg'" alt="Profile Picture">
                 </div>
                 
                 <!-- Display Update Profile form if logged in user visits his own profile page -->
