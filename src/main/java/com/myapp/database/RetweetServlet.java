@@ -35,6 +35,7 @@ public class RetweetServlet extends HttpServlet {
         }
     } 
     
+    /* 
     private String getRetweetContent(int postId, String retweeterUsername) {
         try {
             // Retrieve the original post's content
@@ -47,4 +48,5 @@ public class RetweetServlet extends HttpServlet {
             return "Retweet Error";
         }
     }
+    */
 }
