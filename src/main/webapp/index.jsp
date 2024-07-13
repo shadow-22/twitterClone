@@ -42,6 +42,16 @@
             </div>
         </div>
     </div>
+    
+    <% 
+    // Check if the user is logged in
+    String currentSessionUsername = (String) session.getAttribute("username");
+    if (currentSessionUsername != null) {
+    %>
+    <div class="container mt-5">
+        <button onclick="window.location.href = 'secure-page.jsp?username=<%= currentSessionUsername %>';" class="btn btn-primary" style="position: absolute; top: 10px; left: 10px;">Go to My Homepage</button>
+    </div>
+    <% } %>
 
     <div class="container mt-5">
         <div class="row justify-content-end">
