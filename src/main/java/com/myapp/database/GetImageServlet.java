@@ -21,7 +21,7 @@ public class GetImageServlet extends HttpServlet {
         System.out.println("Requested Image Name: " + imageName);
 
         // Construct the full image path using the configured upload directory
-        String uploadDirectory = "C:/Users/katsa/OneDrive/Documents/myProjects/webApps/emailService/myapp/src/main/webapp/uploads/profile_pictures/";
+        String uploadDirectory = "C:/Users/katsa/OneDrive/Documents/myProjects/webApps/TwitterClone/myapp/src/main/webapp/uploads/profile_pictures/";
         String imagePath = uploadDirectory + imageName;
 
         System.out.println("Image Path is: " + imagePath);
