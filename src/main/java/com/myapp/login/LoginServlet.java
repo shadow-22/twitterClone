@@ -22,6 +22,16 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false); // Get existing session if it exists
+
+        // Check if user is already logged in
+        if (session != null && session.getAttribute("username") != null) {
+            // Redirect to the home page or show a message
+            response.sendRedirect("secure-page.jsp?username=" + session.getAttribute("username"));
+            return;
+        }
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
@@ -34,7 +44,7 @@ public class LoginServlet extends HttpServlet {
                     try (ResultSet resultSet = preparedStatement.executeQuery()) {
                         if (resultSet.next()) {
                             // User is authenticated, create a session and redirect to a secure page
-                            HttpSession session = request.getSession();
+                            //HttpSession session = request.getSession();
                             session.setAttribute("username", username);
                             response.sendRedirect("secure-page.jsp");
                         } else {
