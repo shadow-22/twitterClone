@@ -104,7 +104,7 @@
                         DatabaseUtils databaseUtils = new DatabaseUtils();
                         List<Post> posts = databaseUtils.getAllPosts(username);
                     %>
-                    <% for (int i = posts.size() - 1; i >= 0; i--) { %>
+                    <% for (int i = 0; i < posts.size(); i++) { %>
                     <div class="post">
                         <%-- Check if the post is a retweet --%>
                         <% if (posts.get(i).isRetweet() && !(posts.get(i).getUsername().equals(username))) { %>
@@ -115,7 +115,7 @@
                         <p><%= posts.get(i).getTimestamp() %>s</p>
                         
                         <!-- Add Retweet button -->
-                        <% if (!posts.get(i).getUsername().equals(currentSessionUsername) && !posts.get(i).isRetweet()) { %>
+                        <% if (currentSessionUsername != null && posts.get(i).getRetweeterUsername() == null && !posts.get(i).getUsername().equals(currentSessionUsername)) { %>
                         <button class="retweetButton" data-postid="<%= posts.get(i).getId() %>">Retweet</button>
                         <% } %>
                     </div>

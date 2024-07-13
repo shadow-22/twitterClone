@@ -101,27 +101,50 @@ public class DatabaseUtils {
     public List<Post> getAllPosts(String username) {
         List<Post> posts = new ArrayList<>();
     
+        String originalPostsSql = "SELECT id, username, postContent, created_at " +
+        "FROM posts " +
+        "WHERE username = ?";
+        
+        String retweetsSql = "SELECT r.original_post_id AS id, p.username, p.postContent, r.retweet_time AS created_at, r.retweeter_username " +
+        "FROM retweets r " +
+        "JOIN posts p ON r.original_post_id = p.id " +
+        "WHERE r.retweeter_username = ?";
+
         try (Connection connection = getConnection()) {
-            //String sql = "SELECT * FROM posts WHERE username = ?";
-            String sql = "SELECT p.id, p.username, p.postContent, p.created_at, r.retweeter_username " +
-                         "FROM posts p " +
-                         "LEFT JOIN retweets r ON p.id = r.original_post_id " +
-                         "WHERE p.username = ? OR r.retweeter_username = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
-                statement.setString(2, username);
-                try (ResultSet resultSet = statement.executeQuery()) {
+        // Fetch original posts
+            try (PreparedStatement originalPostsStatement = connection.prepareStatement(originalPostsSql)) {
+                originalPostsStatement.setString(1, username);
+                try (ResultSet resultSet = originalPostsStatement.executeQuery()) {
                     while (resultSet.next()) {
                         int postId = resultSet.getInt("id");
                         String creatorUsername = resultSet.getString("username");
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
-                        String retweeterUsername = resultSet.getString("retweeter_username");
-                        Post post = new Post(postId, creatorUsername, postContent, timestamp, retweeterUsername);
+                        Post post = new Post(postId, creatorUsername, postContent, timestamp, null);
                         posts.add(post);
                     }
                 }
             }
+
+        // Fetch retweets
+        try (PreparedStatement retweetsStatement = connection.prepareStatement(retweetsSql)) {
+            retweetsStatement.setString(1, username);
+            try (ResultSet resultSet = retweetsStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int postId = resultSet.getInt("id");
+                    String creatorUsername = resultSet.getString("username");
+                    String postContent = resultSet.getString("postContent");
+                    Timestamp timestamp = resultSet.getTimestamp("created_at");
+                    String retweeterUsername = resultSet.getString("retweeter_username");
+                    Post post = new Post(postId, creatorUsername, postContent, timestamp, retweeterUsername);
+                    posts.add(post);
+                }
+            }
+        }
+
+        // Sort posts by timestamp in descending order
+        posts.sort((p1, p2) -> p2.getTimestamp().compareTo(p1.getTimestamp()));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
