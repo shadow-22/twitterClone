@@ -49,8 +49,13 @@
 
             <% 
             String profilePicturePath = DatabaseUtils.getProfilePicturePath(username); 
-            File imageFile = new File(profilePicturePath);
-            String imageName = imageFile.getName();
+            
+            File imageFile;
+            String imageName = "";
+            if (profilePicturePath != null) {
+                imageFile = new File(profilePicturePath);
+                imageName = imageFile.getName();
+            }
 
             // Get the project context path
             String contextPath = request.getContextPath();
