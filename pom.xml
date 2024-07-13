@@ -101,13 +101,25 @@
           <version>2.8.2</version>
         </plugin>
         <plugin>
+          <!-- use this when wanting to use tomcat7-maven-plugin 
           <groupId>org.apache.tomcat.maven</groupId>
-          <artifactId>tomcat7-maven-plugin</artifactId>
-          <version>2.2</version>
+          i used org.opoo.maven because i downloaded a different tomcat9 plugin
+          -->
+          <groupId>org.opoo.maven</groupId>
+          <artifactId>tomcat9-maven-plugin</artifactId>
+          <version>3.0.1</version>
           <configuration>
+          <!-- use this in relation with settings.xml to use an external tomcat server
               <url>http://localhost:8080/manager/text</url>
               <server>tomcat-local</server>
               <path>/my-email-app</path>
+            -->
+            <!-- this didn't work...
+                <tomcatVersion>9.0.41</tomcatVersion>
+                <path>/</path>
+                <port>8080</port>
+                <uriEncoding>UTF-8</uriEncoding>
+              -->
           </configuration>
         </plugin>
       </plugins>
