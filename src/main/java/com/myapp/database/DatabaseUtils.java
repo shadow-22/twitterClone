@@ -32,6 +32,8 @@ public class DatabaseUtils {
             createUsersTable(connection);
             createPostsTable(connection);
             createRetweetsTable(connection);
+            createLikesTable(connection);
+            alterPostsTableForLikeCount(connection); 
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,6 +67,8 @@ public class DatabaseUtils {
                     "username VARCHAR(50) NOT NULL," +
                     "postContent VARCHAR(500) NOT NULL," +
                     "created_at TIMESTAMP" +
+                    "like_count INT DEFAULT 0," +
+                    "FOREIGN KEY (username) REFERENCES users(username)" +
                     ")"
             );
         }
@@ -85,10 +89,32 @@ public class DatabaseUtils {
         }
     }
 
+    public static void createLikesTable(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS likes (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY," +
+                    "post_id INT NOT NULL," +
+                    "username VARCHAR(50) NOT NULL," +
+                    "FOREIGN KEY (post_id) REFERENCES posts(id)," +
+                    "FOREIGN KEY (username) REFERENCES users(username)" +
+                    ")"
+            );
+        }
+    }
+    
+    private void alterPostsTableForLikeCount(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "ALTER TABLE posts ADD COLUMN IF NOT EXISTS like_count INT DEFAULT 0"
+            );
+        }
+    }    
+
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO posts (username, postContent, created_at) VALUES (?, ?, ?)")) {
+                    "INSERT INTO posts (username, postContent, created_at, likeCount) VALUES (?, ?, ?, 0)")) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, postContent);
             // Set the timestamp to the current time
@@ -205,7 +231,7 @@ public class DatabaseUtils {
         }
     }
     
-    public Post getNewlyInsertedPost(String username) {
+    public static Post getNewlyInsertedPost(String username) {
         try (Connection connection = getConnection()) {
             String sql = "SELECT * FROM posts WHERE username = ? ORDER BY id DESC LIMIT 1";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -215,7 +241,7 @@ public class DatabaseUtils {
                         int postId = resultSet.getInt("id");
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
-                        return new Post(postId, username, postContent, timestamp);
+                        return new Post(postId, username, postContent, timestamp, 0);
                     }
                 }
             }

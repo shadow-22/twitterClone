@@ -8,12 +8,14 @@ public class Post {
     private String postContent;
     private Timestamp timestamp;
     private String retweeterUsername; 
+    private int likeCount;
 
-    public Post(int id, String username, String postContent, Timestamp timestamp) {
+    public Post(int id, String username, String postContent, Timestamp timestamp, int likeCount) {
         this.id = id;
         this.username = username;
         this.postContent = postContent;
         this.timestamp = timestamp;
+        this.likeCount = likeCount;
     }    
 
     public Post(int id, String username, String postContent, Timestamp timestamp, String retweeterUsername) {
@@ -60,6 +62,14 @@ public class Post {
     // Method to get the retweeter's username
     public String getRetweeterUsername() {
         return retweeterUsername;
+    }
+
+    public int getLikeCount() {
+        return this.likeCount;
+    }
+
+    public void setLikeCount(int count) {
+        this.likeCount = count;
     }
 
 }

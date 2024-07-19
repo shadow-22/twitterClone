@@ -27,9 +27,9 @@ public class CreatePostServlet extends HttpServlet {
 
         try {
             DatabaseUtils.insertPost(username, postContent);
-            DatabaseUtils databaseUtils = new DatabaseUtils();
+            //DatabaseUtils databaseUtils = new DatabaseUtils();
             // Get the newly inserted post
-            Post newPost = databaseUtils.getNewlyInsertedPost(username);
+            Post newPost = DatabaseUtils.getNewlyInsertedPost(username);
 
             // Generate the timestamp for the new post
             /* 
