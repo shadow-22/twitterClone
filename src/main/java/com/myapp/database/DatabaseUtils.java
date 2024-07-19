@@ -241,7 +241,8 @@ public class DatabaseUtils {
                         int postId = resultSet.getInt("id");
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
-                        return new Post(postId, username, postContent, timestamp, 0);
+                        int likeCount = resultSet.getInt("like_count");
+                        return new Post(postId, username, postContent, timestamp, likeCount);
                     }
                 }
             }
