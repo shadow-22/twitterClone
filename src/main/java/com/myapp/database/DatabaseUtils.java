@@ -111,6 +111,62 @@ public class DatabaseUtils {
         }
     }    
 
+    public static void addLike(int postId, String username) {
+        try (Connection conn = getConnection()) {
+            String sql = "INSERT INTO likes (post_id, username) VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                stmt.setString(2, username);
+                stmt.executeUpdate();
+            }
+
+            sql = "UPDATE posts SET like_count = like_count + 1 WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeLike(int postId, String username) {
+        try (Connection conn = getConnection()) {
+            String sql = "DELETE FROM likes WHERE post_id = ? AND username = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                stmt.setString(2, username);
+                stmt.executeUpdate();
+            }
+
+            sql = "UPDATE posts SET like_count = like_count - 1 WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getLikeCount(int postId) {
+        int likeCount = 0;
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT like_count FROM posts WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        likeCount = rs.getInt("like_count");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return likeCount;
+    }
+
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
