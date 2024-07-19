@@ -10,6 +10,9 @@ public class Post {
     private String retweeterUsername; 
     private int likeCount;
 
+    // First two Constructor methods are basically for retrieval purposes from SQL queries
+    // The rest are helper methods for manipulation and moving around data 
+    
     public Post(int id, String username, String postContent, Timestamp timestamp, int likeCount) {
         this.id = id;
         this.username = username;
@@ -24,6 +27,14 @@ public class Post {
         this.postContent = postContent;
         this.timestamp = timestamp;
         this.retweeterUsername = retweeterUsername;
+    }
+
+    public Post(String username, String postContent, Timestamp timestamp, int likeCount) {
+        this.id = -1;
+        this.username = username;
+        this.postContent = postContent;
+        this.timestamp = timestamp;
+        this.likeCount = likeCount;
     }
 
     public int getId() {
