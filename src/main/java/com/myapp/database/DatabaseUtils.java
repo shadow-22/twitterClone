@@ -170,7 +170,7 @@ public class DatabaseUtils {
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO posts (username, postContent, created_at, likeCount) VALUES (?, ?, ?, 0)")) {
+                    "INSERT INTO posts (username, postContent, created_at, like_count) VALUES (?, ?, ?, 0)")) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, postContent);
             // Set the timestamp to the current time
@@ -183,7 +183,7 @@ public class DatabaseUtils {
     public List<Post> getAllPosts(String username) {
         List<Post> posts = new ArrayList<>();
     
-        String originalPostsSql = "SELECT id, username, postContent, created_at " +
+        String originalPostsSql = "SELECT id, username, postContent, created_at, like_count " +
         "FROM posts " +
         "WHERE username = ?";
         
@@ -202,7 +202,8 @@ public class DatabaseUtils {
                         String creatorUsername = resultSet.getString("username");
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
-                        Post post = new Post(postId, creatorUsername, postContent, timestamp, null);
+                        int likeCount = resultSet.getInt("like_count");
+                        Post post = new Post(postId, creatorUsername, postContent, timestamp, likeCount);
                         posts.add(post);
                     }
                 }
