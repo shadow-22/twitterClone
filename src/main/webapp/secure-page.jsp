@@ -15,6 +15,7 @@
     <script src="ajax-post.js"></script>
     <script src="ajax-retweet.js"></script>
     <script src="ajax-updateProfile.js"></script>
+    <script src="ajax-like.js"></script>
 </head>
 <body>
     <div class="container mt-5">
@@ -110,7 +111,7 @@
                         List<Post> posts = databaseUtils.getAllPosts(username);
                     %>
                     <% for (int i = 0; i < posts.size(); i++) { %>
-                    <div class="post">
+                    <div class="post" id="post-<%= posts.get(i).getId() %>">
                         <%-- Check if the post is a retweet --%>
                         <% if (posts.get(i).isRetweet() && !(posts.get(i).getUsername().equals(username))) { %>
                             <p>Retweeted by <%= posts.get(i).getRetweeterUsername() %></p>
@@ -118,11 +119,17 @@
                         <% } %>
                         <p><%= posts.get(i).getPostContent() %></p>
                         <p><%= posts.get(i).getTimestamp() %>s</p>
+                        <p>Likes: <span class="like-count"><%= posts.get(i).getLikeCount() %></span></p>
                         
                         <!-- Add Retweet button -->
                         <% if (currentSessionUsername != null && posts.get(i).getRetweeterUsername() == null && !posts.get(i).getUsername().equals(currentSessionUsername)) { %>
                         <button class="retweetButton" data-postid="<%= posts.get(i).getId() %>">Retweet</button>
                         <% } %>
+
+                        <!-- Add Like button -->
+                        <% if (currentSessionUsername != null) { %>
+                            <button class="like-button" data-postid="<%= posts.get(i).getId() %>">Like</button>
+                        <% } %>    
                     </div>
                     <% } %>
                 </div>
