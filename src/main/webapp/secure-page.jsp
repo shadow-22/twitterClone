@@ -127,7 +127,7 @@
                         <% } %>
 
                         <!-- Add Like button -->
-                        <% if (currentSessionUsername != null) { %>
+                        <% if (currentSessionUsername != null && posts.get(i).getRetweeterUsername() == null) { %>
                             <button class="like-button" data-postid="<%= posts.get(i).getId() %>">Like</button>
                         <% } %>    
                     </div>
