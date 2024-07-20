@@ -103,6 +103,7 @@ public class DatabaseUtils {
         }
     }
     
+    /*
     private void alterPostsTableForLikeCount(Connection connection) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(
@@ -110,6 +111,7 @@ public class DatabaseUtils {
             );
         }
     }    
+    */
 
     public static void addLike(int postId, String username) {
         try (Connection conn = getConnection()) {
