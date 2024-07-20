@@ -9,32 +9,36 @@ public class Post {
     private Timestamp timestamp;
     private String retweeterUsername; 
     private int likeCount;
+    private boolean liked;
 
     // First two Constructor methods are basically for retrieval purposes from SQL queries
     // The rest are helper methods for manipulation and moving around data 
     
-    public Post(int id, String username, String postContent, Timestamp timestamp, int likeCount) {
+    public Post(int id, String username, String postContent, Timestamp timestamp, int likeCount, boolean liked) {
         this.id = id;
         this.username = username;
         this.postContent = postContent;
         this.timestamp = timestamp;
         this.likeCount = likeCount;
+        this.liked = liked;
     }    
 
-    public Post(int id, String username, String postContent, Timestamp timestamp, String retweeterUsername) {
+    public Post(int id, String username, String postContent, Timestamp timestamp, String retweeterUsername, boolean liked) {
         this.id = id;
         this.username = username;
         this.postContent = postContent;
         this.timestamp = timestamp;
         this.retweeterUsername = retweeterUsername;
+        this.liked = liked;
     }
 
-    public Post(String username, String postContent, Timestamp timestamp, int likeCount) {
+    public Post(String username, String postContent, Timestamp timestamp, int likeCount, boolean liked) {
         this.id = -1;
         this.username = username;
         this.postContent = postContent;
         this.timestamp = timestamp;
         this.likeCount = likeCount;
+        this.liked = liked;
     }
 
     public int getId() {
@@ -81,6 +85,14 @@ public class Post {
 
     public void setLikeCount(int count) {
         this.likeCount = count;
+    }
+    
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
 }
