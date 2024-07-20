@@ -33,7 +33,7 @@ public class DatabaseUtils {
             createPostsTable(connection);
             createRetweetsTable(connection);
             createLikesTable(connection);
-            alterPostsTableForLikeCount(connection); 
+            //alterPostsTableForLikeCount(connection); 
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class DatabaseUtils {
     public static void createLikesTable(Connection connection) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS likes (" +
+                    "CREATE TABLE IF NOT EXISTS myappdb.likes (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "post_id INT NOT NULL," +
                     "username VARCHAR(50) NOT NULL," +
@@ -106,7 +106,7 @@ public class DatabaseUtils {
     private void alterPostsTableForLikeCount(Connection connection) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(
-                    "ALTER TABLE posts ADD COLUMN IF NOT EXISTS like_count INT DEFAULT 0"
+                    "ALTER TABLE myappdb.posts ADD COLUMN IF NOT EXISTS like_count INT DEFAULT 0"
             );
         }
     }    
