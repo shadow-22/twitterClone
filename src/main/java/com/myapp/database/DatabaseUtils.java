@@ -66,7 +66,7 @@ public class DatabaseUtils {
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "username VARCHAR(50) NOT NULL," +
                     "postContent VARCHAR(500) NOT NULL," +
-                    "created_at TIMESTAMP" +
+                    "created_at TIMESTAMP," +
                     "like_count INT DEFAULT 0," +
                     "FOREIGN KEY (username) REFERENCES users(username)" +
                     ")"
