@@ -22,8 +22,8 @@ public class CreatePostServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
 
-        System.out.println("Received postContent: " + postContent);
-        System.out.println("Received username: " + username);
+        //System.out.println("Received postContent: " + postContent);
+        //System.out.println("Received username: " + username);
 
         try {
             DatabaseUtils.insertPost(username, postContent);

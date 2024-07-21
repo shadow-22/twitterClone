@@ -169,6 +169,25 @@ public class DatabaseUtils {
         return likeCount;
     }
 
+    public static boolean hasUserLiked(int postId, String username) {
+        boolean isLiked = false;
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT COUNT(*) FROM likes WHERE post_id = ? AND username = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, postId);
+                stmt.setString(2, username);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        isLiked = rs.getInt(1) > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isLiked;
+    }    
+
     public static void insertPost(String username, String postContent) throws SQLException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -182,24 +201,24 @@ public class DatabaseUtils {
         }
     }
 
-    public List<Post> getAllPosts(String username) {
+    public static List<Post> getAllPosts(String username, String sessionUsername) {
         List<Post> posts = new ArrayList<>();
     
-        String originalPostsSql = "SELECT id, username, postContent, created_at, like_count, " +
-        "(SELECT COUNT(*) FROM likes WHERE post_id = id AND username = ?) AS liked " + 
-        "FROM posts " +
-        "WHERE username = ?";
+        String originalPostsSql = "SELECT p.id, p.username, p.postContent, p.created_at, p.like_count, " +
+                    "(SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id AND l.username = ?) AS liked " +
+                    "FROM posts p " +
+                    "WHERE p.username = ?";
         
         String retweetsSql = "SELECT r.original_post_id AS id, p.username, p.postContent, r.retweet_time AS created_at, r.retweeter_username, p.like_count, " +
-        "(SELECT COUNT(*) FROM likes WHERE post_id = r.original_post_id AND username = ?) AS liked " +
-        "FROM retweets r " +
-        "JOIN posts p ON r.original_post_id = p.id " +
-        "WHERE r.retweeter_username = ?";
+                    "(SELECT COUNT(*) FROM likes l WHERE l.post_id = r.original_post_id AND l.username = ?) AS liked " +
+                    "FROM retweets r " +
+                    "JOIN posts p ON r.original_post_id = p.id " +
+                    "WHERE r.retweeter_username = ?";
 
         try (Connection connection = getConnection()) {
         // Fetch original posts
             try (PreparedStatement originalPostsStatement = connection.prepareStatement(originalPostsSql)) {
-                originalPostsStatement.setString(1, username);
+                originalPostsStatement.setString(1, sessionUsername);
                 originalPostsStatement.setString(2, username);
                 try (ResultSet resultSet = originalPostsStatement.executeQuery()) {
                     while (resultSet.next()) {
@@ -209,6 +228,11 @@ public class DatabaseUtils {
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
                         int likeCount = resultSet.getInt("like_count");
                         boolean liked = resultSet.getInt("liked") > 0;
+                        
+                        // debugging....
+                        //System.out.println("Value of liked is " + resultSet.getInt("liked"));
+                        //System.out.println("Is liked? " + liked);
+
                         Post post = new Post(postId, creatorUsername, postContent, timestamp, likeCount, liked);
                         posts.add(post);
                     }
@@ -216,7 +240,7 @@ public class DatabaseUtils {
             }
         // Fetch retweets
             try (PreparedStatement retweetsStatement = connection.prepareStatement(retweetsSql)) {
-                retweetsStatement.setString(1, username);
+                retweetsStatement.setString(1, sessionUsername);
                 retweetsStatement.setString(2, username);
                 try (ResultSet resultSet = retweetsStatement.executeQuery()) {
                     while (resultSet.next()) {
@@ -225,8 +249,9 @@ public class DatabaseUtils {
                         String postContent = resultSet.getString("postContent");
                         Timestamp timestamp = resultSet.getTimestamp("created_at");
                         String retweeterUsername = resultSet.getString("retweeter_username");
+                        int likeCount = resultSet.getInt("like_count");
                         boolean liked = resultSet.getInt("liked") > 0;
-                        Post post = new Post(postId, creatorUsername, postContent, timestamp, retweeterUsername, liked);
+                        Post post = new Post(postId, creatorUsername, postContent, timestamp, retweeterUsername, likeCount, liked);
                         posts.add(post);
                     }
                 }

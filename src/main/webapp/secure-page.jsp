@@ -107,8 +107,12 @@
             <div class="card-body">
                 <div id="postsContainer">
                     <%
-                        DatabaseUtils databaseUtils = new DatabaseUtils();
-                        List<Post> posts = databaseUtils.getAllPosts(username);
+                    List<Post> posts;
+                        if (currentSessionUsername != null) {
+                            posts = DatabaseUtils.getAllPosts(username, currentSessionUsername);                            
+                        } else {
+                            posts = DatabaseUtils.getAllPosts(username, username);                            
+                        }
                     %>
                     <% for (int i = 0; i < posts.size(); i++) { %>
                     <div class="post" id="post-<%= posts.get(i).getId() %>">
@@ -128,7 +132,11 @@
 
                         <!-- Add Like button -->
                         <% if (currentSessionUsername != null) { %>
-                            <button class="like-button" data-postid="<%= posts.get(i).getId() %>">Like</button>
+                            <button class="like-button" 
+                                data-postid="<%= posts.get(i).getId() %>" 
+                                data-isliked="<%= posts.get(i).isLiked() %>">
+                                    <%= posts.get(i).isLiked() ? "Unlike" : "Like" %>
+                            </button>
                         <% } %>    
                     </div>
                     <% } %>

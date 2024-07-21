@@ -20,15 +20,21 @@ public class LikeServlet extends HttpServlet {
         int postId = Integer.parseInt(request.getParameter("postId"));
         boolean isLiked = Boolean.parseBoolean(request.getParameter("isLiked"));
 
+        // debugging...
+        //System.out.println("from likeservlet, is liked? " + isLiked);
+
         if (username != null) {
-            if (isLiked) {
+            boolean userHasLiked = DatabaseUtils.hasUserLiked(postId, username);
+            
+            if (!userHasLiked) {
                 DatabaseUtils.addLike(postId, username);
             } else {
                 DatabaseUtils.removeLike(postId, username);
             }
+
             int likeCount = DatabaseUtils.getLikeCount(postId);
             response.setContentType("application/json");
-            response.getWriter().write("{\"likeCount\": " + likeCount + "}");
+            response.getWriter().write("{\"likeCount\": " + likeCount + ", \"isLiked\": " + isLiked + "}");
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }

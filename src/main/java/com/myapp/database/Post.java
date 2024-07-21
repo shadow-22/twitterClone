@@ -23,12 +23,13 @@ public class Post {
         this.liked = liked;
     }    
 
-    public Post(int id, String username, String postContent, Timestamp timestamp, String retweeterUsername, boolean liked) {
+    public Post(int id, String username, String postContent, Timestamp timestamp, String retweeterUsername, int likeCount, boolean liked) {
         this.id = id;
         this.username = username;
         this.postContent = postContent;
         this.timestamp = timestamp;
         this.retweeterUsername = retweeterUsername;
+        this.likeCount = likeCount;
         this.liked = liked;
     }
 

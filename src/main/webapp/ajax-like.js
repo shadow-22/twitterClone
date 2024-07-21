@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     const likeButtons = document.querySelectorAll(".like-button");
     likeButtons.forEach(button => {
+        // Extract the initial state from the button's data attributes
+        const isLiked = button.getAttribute("data-isliked") === "true";
+        button.textContent = isLiked ? "Unlike" : "Like";
+
         button.addEventListener("click", function() {
             const postId = this.getAttribute("data-postid");
             const postDiv = document.getElementById("post-" + postId);
             const likeCountSpan = postDiv.querySelector(".like-count");
             
-            const isLiked = this.textContent === "Like" ? true : false;
-            const url = `like?postId=${postId}&isLiked=${isLiked}`;
+            const isCurrentlyLiked = this.textContent === "Unlike";
+            const url = `like?postId=${postId}&isLiked=${!isCurrentlyLiked}`;
 
             fetch(url, {
                 method: "POST",
@@ -17,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }).then(response => response.json())
               .then(data => {
                   likeCountSpan.textContent = data.likeCount;
-                  this.textContent = isLiked ? "Unlike" : "Like";
+                  this.textContent = data.isLiked ? "Unlike" : "Like";
               });
         });
     });
